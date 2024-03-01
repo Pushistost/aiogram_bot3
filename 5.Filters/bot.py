@@ -5,6 +5,7 @@ import betterlogging as bl
 from aiogram import Bot, Dispatcher
 
 from tg_bot.config import load_config
+from tg_bot.handlers.magic_handlers import magic_router
 from tg_bot.handlers.start import start_router
 
 
@@ -14,7 +15,7 @@ async def main():
     bot = Bot(token=config.tg_bot.token)
     dp = Dispatcher()
 
-    dp.include_router(start_router)
+    dp.include_routers(start_router, magic_router)
 
     await dp.start_polling(bot)
     await bot.session.close()
