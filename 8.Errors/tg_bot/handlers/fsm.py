@@ -34,29 +34,30 @@ async def choose_add_income_expenses(message: types.Message, state: FSMContext):
     await state.set_state(SetIncomeExpenses.AddIncome)
 
 
-@budget_router.message(SetIncomeExpenses.AddIncome,
-                       F.text.isdigit(),
-                       F.text.cast(int).as_("income"),
-                       )
+@budget_router.message(
+    SetIncomeExpenses.AddIncome,
+    # F.text.isdigit(),
+    F.text.as_("income"),
+    )
 async def enter_income(message: types.Message, state: FSMContext, income: int):
     """
     Принимает от пользователя сумму дохода и переводит его к вводу расходов.
     """
-    await state.update_data(income=income)
+    await state.update_data(income=int(income))
     await message.answer("Enter the amount of expenses")
     await state.set_state(SetIncomeExpenses.AddExpenses)
 
 
 @budget_router.message(
     SetIncomeExpenses.AddExpenses,
-    F.text.isdigit(),
-    F.text.cast(int).as_("expenses"),
+    # F.text.isdigit(),
+    F.text.as_("expenses"),
 )
 async def enter_expenses(message: types.Message, state: FSMContext, expenses: int):
     """
     Принимает от пользователя сумму расходов и завершает ввод данных.
     """
-    await state.update_data(expenses=expenses)
+    await state.update_data(expenses=int(expenses))
     await message.answer("Thank you for entering the data")
     await cmd_budget(message, state)
 
@@ -71,15 +72,16 @@ async def choose_set_budget(message: types.Message, state: FSMContext):
     await state.set_state(EnterBudget)
 
 
-@budget_router.message(EnterBudget,
-                       F.text.isdigit(),
-                       F.text.cast(int).as_("budget"),
-                       )
+@budget_router.message(
+    EnterBudget,
+    # F.text.isdigit(),
+    F.text.as_("budget"),
+    )
 async def enter_budget(message: types.Message, state: FSMContext, budget: int):
     """
     Принимает от пользователя сумму общего бюджета и завершает ввод данных.
     """
-    await state.update_data(budget=budget)
+    await state.update_data(budget=int(budget))
     await message.answer("Thank you for entering the budget")
     await cmd_budget(message, state)
 
